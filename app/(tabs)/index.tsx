@@ -1,75 +1,131 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import PersonBubble from '@/components/custom/PersonBubble';
+import ReceiptItemView from '@/components/custom/ReceiptItemView';
+import React from 'react';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const HomeScreen = () => {
+  const [selectedItem, setSelectedItem] = React.useState<string>(null);
+  const SAMPLE_RECEIPT_ITEMS = [
+    {
+      id: '1',
+      name: 'Chicken Pasta',
+      quantity: 1,
+      price: 15.99,
+      assignedTo: null,
+    },
+    {
+      id: '2',
+      name: 'Garden Salad',
+      quantity: 1,
+      price: 8.5,
+      assignedTo: null,
+    },
+    {
+      id: '3',
+      name: 'Garlic Bread',
+      quantity: 1,
+      price: 5.99,
+      assignedTo: null,
+    },
+    {
+      id: '4',
+      name: 'Margherita Pizza',
+      quantity: 1,
+      price: 12.99,
+      assignedTo: null,
+    },
+    { id: '5', name: 'Tiramisu', quantity: 1, price: 7.5, assignedTo: null },
+    { id: '6', name: 'Iced Tea', quantity: 1, price: 3.49, assignedTo: null },
+    { id: '7', name: 'Cappuccino', quantity: 1, price: 4.25, assignedTo: null },
+    {
+      id: '8',
+      name: 'Bottled Water',
+      quantity: 1,
+      price: 2.5,
+      assignedTo: null,
+    },
+  ];
 
-export default function HomeScreen() {
+  const people = [
+    { id: '1', name: 'Alice', items: [] },
+    { id: '2', name: 'Bob', items: [] },
+    { id: '3', name: 'Charlie', items: [] },
+    { id: '4', name: 'David', items: [] },
+    { id: '5', name: 'Eve', items: [] },
+  ];
+
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ paddingVertical: 10 }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          {people.map((person) => {
+            return <PersonBubble person={person} key={person.id} />;
+          })}
+        </ScrollView>
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          data={SAMPLE_RECEIPT_ITEMS}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ReceiptItemView
+              item={item}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+            />
+          )}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  cameraContainer: {
+    flex: 1,
+    overflow: 'hidden',
+    borderRadius: 10,
+    margin: 16,
+  },
+  camera: {
+    flex: 1,
+  },
+  controlsContainer: {
+    padding: 20,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  captureButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    marginBottom: 15,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  captureButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  demoButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  demoButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
+
+export default HomeScreen;
