@@ -1,43 +1,46 @@
 import { ReceiptItem } from '@/types';
+import { personColors } from '@/utils/constants';
+import { useBillSplitContext } from '@/utils/context';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import PersonBubbleList from './PersonBubbleList';
 
 type ReceiptItemProps = {
   item: ReceiptItem;
-  selectedItem: boolean;
-  setSelectedItem: (number) => void;
 };
 
-const ReceiptItemView = ({
-  item,
-  selectedItem,
-  setSelectedItem,
-}: ReceiptItemProps) => {
+const ReceiptItemView = ({ item }: ReceiptItemProps) => {
+  const { people, selectedItem, setSelectedItem } = useBillSplitContext();
   const getStatusColor = () => {
-    return item.assignedTo ? '#4CAF50' : '#FFC107';
+    return item.assignedTo ? personColors[item.assignedTo - 1] : '#333';
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { borderLeftColor: getStatusColor() }]}
-      onPress={() => setSelectedItem(item.id)}
-    >
-      <View style={styles.info}>
-        <Text style={styles.name}>
-          {item.name} {item.id === selectedItem ? 'Selected' : ''}
-        </Text>
-        <Text style={styles.price}>
-          ${item.price.toFixed(2)} x {item.quantity}
-        </Text>
-      </View>
-      <View style={styles.assignmentContainer}>
-        {item.assignedTo ? (
-          <Text style={styles.assignedText}>{item.assignedTo}</Text>
-        ) : (
-          <Text style={styles.unassignedText}>Tap to assign</Text>
-        )}
-      </View>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity
+        style={[styles.container, { borderLeftColor: getStatusColor() }]}
+        onPress={() => setSelectedItem(item.id)}
+      >
+        <View style={styles.info}>
+          <Text style={styles.name}>
+            {item.name} {item.id === selectedItem ? 'Selected' : ''}
+          </Text>
+          <Text style={styles.price}>
+            ${item.price.toFixed(2)} x {item.quantity}
+          </Text>
+        </View>
+        <View style={styles.assignmentContainer}>
+          {item.assignedTo ? (
+            <Text style={styles.assignedText}>{item.assignedTo}</Text>
+          ) : (
+            <Text style={styles.unassignedText}>Tap to assign</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+      {selectedItem === item.id && (
+        <PersonBubbleList people={people} itemID={item.id} />
+      )}
+    </View>
   );
 };
 
