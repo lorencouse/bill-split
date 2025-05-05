@@ -23,7 +23,33 @@ const PersonBubble = ({
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const { setReceiptItems, receiptItems } = useBillSplitContext();
+  const { setReceiptItems, receiptItems, people, setPeople } =
+    useBillSplitContext();
+
+  const updateItemAssignment = () => {
+    // Add item to the person's items
+    const updatedPeople = people.map((p) => {
+      if (p.id === person.id) {
+        return {
+          ...p,
+          items: [...p.items, receiptItems.find((item) => item.id === itemID)],
+        };
+      }
+      return p;
+    });
+    setPeople(updatedPeople);
+    // Remove item from the receiptItems
+    const updatedItems = receiptItems.map((item) => {
+      if (item.id === itemID) {
+        return {
+          ...item,
+          assignedTo: person.id,
+        };
+      }
+      return item;
+    });
+    setReceiptItems(updatedItems);
+  };
 
   return (
     <View
@@ -37,16 +63,7 @@ const PersonBubble = ({
     >
       <TouchableOpacity
         onPress={() => {
-          const updatedItems = receiptItems.map((item) => {
-            if (item.id === itemID) {
-              return {
-                ...item,
-                assignedTo: person.id,
-              };
-            }
-            return item;
-          });
-          setReceiptItems(updatedItems);
+          updateItemAssignment();
         }}
         style={{ flex: 1, alignItems: 'center' }}
       >

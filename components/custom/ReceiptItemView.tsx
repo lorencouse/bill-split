@@ -18,7 +18,12 @@ const ReceiptItemView = ({ item }: ReceiptItemProps) => {
   return (
     <View>
       <TouchableOpacity
-        style={[styles.container, { borderLeftColor: getStatusColor() }]}
+        style={[
+          styles.container,
+          {
+            borderColor: getStatusColor(),
+          },
+        ]}
         onPress={() => setSelectedItem(item.id)}
       >
         <View style={styles.info}>
@@ -31,9 +36,9 @@ const ReceiptItemView = ({ item }: ReceiptItemProps) => {
         </View>
         <View style={styles.assignmentContainer}>
           {item.assignedTo ? (
-            <Text style={styles.assignedText}>{item.assignedTo}</Text>
+            <Text>{people[item.assignedTo - 1].name}</Text>
           ) : (
-            <Text style={styles.unassignedText}>Tap to assign</Text>
+            <Text>Tap to assign</Text>
           )}
         </View>
       </TouchableOpacity>
@@ -75,14 +80,6 @@ const styles = StyleSheet.create({
   },
   assignmentContainer: {
     marginLeft: 8,
-  },
-  assignedText: {
-    color: '#4CAF50',
-    fontWeight: '500',
-  },
-  unassignedText: {
-    color: '#FFC107',
-    fontStyle: 'italic',
   },
 });
 

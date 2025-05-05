@@ -5,7 +5,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
-  const { receiptItems } = useBillSplitContext();
+  const { receiptItems, people } = useBillSplitContext();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -15,6 +15,16 @@ const HomeScreen = () => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ReceiptItemView item={item} />}
         />
+        {/* Render a list of ReceiptItemViews for each person.items */}
+        {people.map((person) => (
+          <FlatList
+            key={person.id}
+            data={person.items}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <ReceiptItemView item={item} />}
+          />
+        ))}
+
       </View>
     </SafeAreaView>
   );
